@@ -1,10 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-<<<<<<< HEAD
-*.py[cod]
-=======
 *.py[codz]
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
 *$py.class
 
 # C extensions
@@ -24,10 +20,6 @@ parts/
 sdist/
 var/
 wheels/
-<<<<<<< HEAD
-pip-wheel-metadata/
-=======
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -54,16 +46,10 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
-<<<<<<< HEAD
-*.py,cover
-.hypothesis/
-.pytest_cache/
-=======
 *.py.cover
 .hypothesis/
 .pytest_cache/
 cover/
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
 
 # Translations
 *.mo
@@ -86,10 +72,7 @@ instance/
 docs/_build/
 
 # PyBuilder
-<<<<<<< HEAD
-=======
 .pybuilder/
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
 target/
 
 # Jupyter Notebook
@@ -100,13 +83,9 @@ profile_default/
 ipython_config.py
 
 # pyenv
-<<<<<<< HEAD
-.python-version
-=======
 #   For a library or package, you might want to ignore these files since the code is
 #   intended to run in multiple environments; otherwise, check them in:
 # .python-version
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
@@ -115,9 +94,6 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 
-<<<<<<< HEAD
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-=======
 # UV
 #   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
 #   This is especially recommended for binary packages to ensure reproducibility, and is more
@@ -149,7 +125,6 @@ ipython_config.py
 .pixi
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
 __pypackages__/
 
 # Celery stuff
@@ -161,10 +136,7 @@ celerybeat.pid
 
 # Environments
 .env
-<<<<<<< HEAD
-=======
 .envrc
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
 .venv
 env/
 venv/
@@ -189,8 +161,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-<<<<<<< HEAD
-=======
 
 # pytype static type analyzer
 .pytype/
@@ -235,4 +205,3 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
->>>>>>> 3ab60446c5c7463cffe201623489131e89ed16c4
