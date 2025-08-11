@@ -8,7 +8,9 @@ Functions to edit:
 
 import abc
 import itertools
+from turtle import forward
 from typing import Any
+from cv2 import mean
 from torch import nn
 from torch.nn import functional as F
 from torch import optim
@@ -101,7 +103,6 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         )
         self.mean_net.to(ptu.device)
         self.logstd = nn.Parameter(
-
             torch.zeros(self.ac_dim, dtype=torch.float32, device=ptu.device)
         )
         self.logstd.to(ptu.device)
@@ -124,24 +125,46 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         :return:
             action: sampled action(s) from the policy
         """
+
         # TODO: implement the forward pass of the network.
         # You can return anything you want, but you should be able to differentiate
         # through it. For example, you can return a torch.FloatTensor. You can also
         # return more flexible objects, such as a
         # `torch.distributions.Distribution` object. It's up to you!
-        raise NotImplementedError
 
-    def update(self, observations, actions):
+        # mean_action = self.mean_net(observation)
+
+        mean_action = self.mean_net(observation)
+        std = torch.exp(self.logstd).expand_as(mean_action)
+
+        return distributions.Normal(mean_action, std)
+
+
+    def update(self, obs, acs, **kwargs):
         """
         Updates/trains the policy
 
         :param observations: observation(s) to query the policy
         :param actions: actions we want the policy to imitate
+        :param **kwargs: additional keyword arguments (for compatibility with base class)
         :return:
             dict: 'Training Loss': supervised learning loss
         """
+
         # TODO: update the policy and return the loss
-        loss = TODO
+        # loss = TODO
+
+        obs = ptu.from_numpy(obs.astype(np.float32)).float()
+        acs = ptu.from_numpy(acs.astype(np.float32)).float()
+
+        action_dist = self.forward(obs)
+        loss = -action_dist.log_prob(acs).sum()
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        # epoch_loss = loss.detach().cpu().numpy().squeeze()
+        self.optimizer.step()
+
         return {
             # You can add extra logging information here, but keep this line
             'Training Loss': ptu.to_numpy(loss),

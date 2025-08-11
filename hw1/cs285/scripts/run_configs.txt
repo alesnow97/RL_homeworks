@@ -1,0 +1,24 @@
+Behavioral Cloning
+
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Ant.pkl --env_name Ant-v4 --exp_name bc_ant --n_iter 1 --expert_data cs285/expert_data/expert_data_Ant-v4.pkl --video_log_freq -1
+
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/HalfCheetah.pkl --env_name HalfCheetah-v4 --exp_name bc_halfcheetah --n_iter 1 --expert_data cs285/expert_data/expert_data_HalfCheetah-v4.pkl --video_log_freq -1
+
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Hopper.pkl --env_name Hopper-v4 --exp_name bc_hopper --n_iter 1 --expert_data cs285/expert_data/expert_data_Hopper-v4.pkl --eval_batch_size 5000 --video_log_freq -1
+
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Walker2d.pkl --env_name Walker2d-v4 --exp_name bc_walker2d --n_iter 1 --expert_data cs285/expert_data/expert_data_Walker2d-v4.pkl --eval_batch_size 5000 --video_log_freq -1
+
+
+
+DAGGER
+- Varying Number of Iterations
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Ant.pkl --env_name Ant-v4 --exp_name DAG_ant --n_iter 1 --expert_data cs285/expert_data/expert_data_Ant-v4.pkl --do_dagger --n_iter 2
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Ant.pkl --env_name Ant-v4 --exp_name DAG_ant --n_iter 1 --expert_data cs285/expert_data/expert_data_Ant-v4.pkl --do_dagger --n_iter 10
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Ant.pkl --env_name Ant-v4 --exp_name DAG_ant --n_iter 1 --expert_data cs285/expert_data/expert_data_Ant-v4.pkl --do_dagger --n_iter 100
+
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/HalfCheetah.pkl --env_name HalfCheetah-v4 --exp_name DAG_halfcheetah --n_iter 1 --expert_data cs285/expert_data/expert_data_HalfCheetah-v4.pkl --video_log_freq -1
+
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Hopper.pkl --env_name Hopper-v4 --exp_name DAG_hopper --n_iter 1 --expert_data cs285/expert_data/expert_data_Hopper-v4.pkl --eval_batch_size 5000 --video_log_freq -1
+
+python cs285/scripts/run_hw1.py --expert_policy_file cs285/policies/experts/Walker2d.pkl --env_name Walker2d-v4 --exp_name DAG_walker2d --n_iter 1 --expert_data cs285/expert_data/expert_data_Walker2d-v4.pkl --eval_batch_size 5000 --video_log_freq -1
+
