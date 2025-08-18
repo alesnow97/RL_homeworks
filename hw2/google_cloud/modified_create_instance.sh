@@ -2,7 +2,7 @@
 
 # Creates a new GPU instance, transfers the code to it, and runs some installation steps.
 
-export ZONE="europe-west1"
+export ZONE="europe-southwest1-a"
 export INSTANCE_NAME="cs285"
 
 echo "Creating instance..."
@@ -12,15 +12,12 @@ gcloud compute instances create $INSTANCE_NAME \
   --image-family=pytorch-2-7-cu128-ubuntu-2204-nvidia-570 \
   --image-project=deeplearning-platform-release \
   --maintenance-policy=TERMINATE \
-  --machine-type=n1-standard-4 \
-  # --accelerator="type=nvidia-tesla-t4,count=1" \
-  # --metadata="install-nvidia-driver=True"
+  --machine-type=c4-standard-4 \
 
 echo "-------------------------------------"
-# echo "Waiting for NVIDIA driver install..."
 
 while true; do
-  output=$(gcloud compute ssh $INSTANCE_NAME --zone=$ZONE --command="nvidia-smi" 2>&1)
+  output=$(gcloud compute ssh $INSTANCE_NAME --zone=$ZONE 2>&1)
 
   if [ $? -eq 0 ]; then
     echo $output
@@ -47,6 +44,7 @@ gcloud compute ssh $INSTANCE_NAME --zone=$ZONE --command='
   bash -lic "pip install -r requirements.txt"
   bash -lic "pip install -e ." \
 '
+
 
 echo "-------------------------------------"
 echo "Shutting down..."

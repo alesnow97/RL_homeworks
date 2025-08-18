@@ -59,8 +59,9 @@ class MLPPolicy(nn.Module):
     def get_action(self, obs: np.ndarray) -> np.ndarray:
         """Takes a single observation (as a numpy array) and returns a single action (as a numpy array)."""
         # TODO: implement get_action
-        action = None
-
+        obs_tensor = ptu.from_numpy(obs).float()
+        action_dist = self.forward(obs_tensor)
+        action = action_dist.sample().detach().cpu().numpy()
         return action
 
     def forward(self, obs: torch.FloatTensor):
@@ -71,12 +72,17 @@ class MLPPolicy(nn.Module):
         """
         if self.discrete:
             # TODO: define the forward pass for a policy with a discrete action space.
-            pass
+            # é corretto qui usare forward??
+            action_probs = self.logits_net(obs)
+            return distributions.Categorical(logits=action_probs)
         else:
             # TODO: define the forward pass for a policy with a continuous action space.
-            pass
-        return None
+            action_mean = self.mean_net(obs)
+            action_std = self.logstd.exp()
+            return distributions.MultivariateNormal(loc=action_mean, covariance_matrix=torch.diag(action_std ** 2))
+            # return distributions.Normal(loc=action_mean, scale=action_std)    
 
+    
     def update(self, obs: np.ndarray, actions: np.ndarray, *args, **kwargs) -> dict:
         """Performs one iteration of gradient descent on the provided batch of data."""
         raise NotImplementedError
@@ -92,12 +98,23 @@ class MLPPolicyPG(MLPPolicy):
         advantages: np.ndarray,
     ) -> dict:
         """Implements the policy gradient actor update."""
-        obs = ptu.from_numpy(obs)
+        obs = ptu.from_numpy(obs) # type: ignore
         actions = ptu.from_numpy(actions)
         advantages = ptu.from_numpy(advantages)
 
         # TODO: implement the policy gradient actor update.
-        loss = None
+        action_dist = self.forward(obs)
+        log_probs = action_dist.log_prob(actions)
+        weighted_log_probs = log_probs * advantages
+        # TODO probably we should use "mean" here
+        loss = -weighted_log_probs.mean()
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        # TODO implement here the value function update
+
 
         return {
             "Actor Loss": ptu.to_numpy(loss),
