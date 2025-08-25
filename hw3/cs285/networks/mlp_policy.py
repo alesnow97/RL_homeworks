@@ -76,6 +76,7 @@ class MLPPolicy(nn.Module):
             action_distribution = distributions.Categorical(logits=logits)
         else:
             if self.state_dependent_std:
+                net_obs = self.net(obs)
                 mean, std = torch.chunk(self.net(obs), 2, dim=-1)
                 std = torch.nn.functional.softplus(std) + 1e-2
             else:

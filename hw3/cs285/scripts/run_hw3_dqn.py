@@ -91,9 +91,10 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
         epsilon = exploration_schedule.value(step)
         
         # TODO(student): Compute action
-        action = ...
+        action = agent.get_action(observation, epsilon=epsilon)
 
         # TODO(student): Step the environment
+        next_observation, reward, done, info = env.step(action)
 
         next_observation = np.asarray(next_observation)
         truncated = info.get("TimeLimit.truncated", False)
@@ -105,9 +106,10 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
             ...
         else:
             # We're using the regular replay buffer
-            ...
+            replay_buffer.insert(observation, action, reward, next_observation, np.asarray(not truncated and done))
 
         # Handle episode termination
+        # is Done set to false if the episode is terminated due to the exceeded time limit?  
         if done:
             reset_env_training()
 
@@ -119,13 +121,20 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
         # Main DQN training loop
         if step >= config["learning_starts"]:
             # TODO(student): Sample config["batch_size"] samples from the replay buffer
-            batch = ...
+            batch = replay_buffer.sample(config["batch_size"])
 
             # Convert to PyTorch tensors
             batch = ptu.from_numpy(batch)
 
             # TODO(student): Train the agent. `batch` is a dictionary of numpy arrays,
-            update_info = ...
+            update_info = agent.update(
+                obs=batch["observations"],
+                action=batch["actions"],
+                reward=batch["rewards"],
+                next_obs=batch["next_observations"],
+                done=batch["dones"],
+                step=step
+            )
 
             # Logging code
             update_info["epsilon"] = epsilon
@@ -134,13 +143,14 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
             if step % args.log_interval == 0:
                 for k, v in update_info.items():
                     logger.log_scalar(v, k, step)
+                    print(f"{k}: {v}")
                 logger.flush()
 
         if step % args.eval_interval == 0:
             # Evaluate
             trajectories = utils.sample_n_trajectories(
                 eval_env,
-                agent,
+                agent,      # TODO this part is likely to be changed
                 args.num_eval_trajectories,
                 ep_len,
             )
@@ -149,6 +159,8 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
 
             logger.log_scalar(np.mean(returns), "eval_return", step)
             logger.log_scalar(np.mean(ep_lens), "eval_ep_len", step)
+            print("Mean returns are ", np.mean(returns))
+            print("Mean episode lengths are ", np.mean(ep_lens))
 
             if len(returns) > 1:
                 logger.log_scalar(np.std(returns), "eval/return_std", step)

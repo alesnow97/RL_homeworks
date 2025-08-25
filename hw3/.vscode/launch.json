@@ -1,0 +1,41 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "HW3-Python Debugger",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "/home/alessio/Scrivania/homework_fall2023/hw3",
+            "args": [
+                "-cfg", "experiments/dqn/cartpole.yaml"
+            ],
+        },
+        {
+            "name": "Pendulum HW3-Python Debugger",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "/home/alessio/Scrivania/homework_fall2023/hw3",
+            "args": [
+                "-cfg", "experiments/sac/sanity_pendulum.yaml"
+            ],
+        },
+                {
+            "name": "Inverted Pendulum HW3-Python Debugger",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "/home/alessio/Scrivania/homework_fall2023/hw3",
+            "args": [
+                "-cfg", "experiments/sac/sanity_invertedpendulum_reinforce.yaml"
+            ],
+        }
+    ]
+}

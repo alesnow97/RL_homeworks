@@ -7,7 +7,8 @@ ipython==7.34.0
 moviepy==1.0.3
 pyvirtualdisplay==3.0
 torch==1.13.1
-opencv-python==4.6.0.66
+numpy==1.26.4
+opencv-python==4.10.0.84
 ipdb==0.13.9
 swig==4.0.2
 box2d-py==2.3.8
