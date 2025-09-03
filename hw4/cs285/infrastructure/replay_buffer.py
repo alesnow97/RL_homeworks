@@ -107,6 +107,8 @@ class ReplayBuffer:
 
         assert observations.shape[1:] == self.observations.shape[1:]
         assert actions.shape[1:] == self.actions.shape[1:]
+        if rewards.shape[1:] != self.rewards.shape[1:]:
+            print("Land here")
         assert rewards.shape[1:] == self.rewards.shape[1:]
         assert next_observations.shape[1:] == self.next_observations.shape[1:]
         assert dones.shape[1:] == self.dones.shape[1:]

@@ -20,7 +20,7 @@ def mpc_config(
     cem_num_elites: Optional[int] = None,
     cem_alpha: Optional[float] = None,
     initial_batch_size: int = 20000,  # number of transitions to collect with random policy at the start
-    batch_size: int = 8000,  # number of transitions to collect per per iteration thereafter
+    batch_size: int = 8000,  # number of transitions to collect per iteration thereafter
     train_batch_size: int = 512,  # number of transitions to train each dynamics model per iteration
     num_iters: int = 20,
     replay_buffer_capacity: int = 1000000,

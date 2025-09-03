@@ -1,3 +1,5 @@
+from math import e
+import re
 import time
 import argparse
 import pickle
@@ -51,15 +53,42 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
     # Replay buffer
     replay_buffer = ReplayBuffer(capacity=config["total_steps"])
 
+    with open(os.path.join(args.dataset_dir, f"{config['dataset_name']}.pkl"), "rb") as f:
+         dataset = pickle.load(f)
+
+    for i in range(len(dataset)):
+        replay_buffer.insert(
+            observation=dataset.observations[i],
+            action=dataset.actions[i],
+            reward=dataset.rewards[i],
+            next_observation=dataset.next_observations[i],
+            done=dataset.dones[i],
+        )
+
     observation = env.reset()
 
     recent_observations = []
 
     num_offline_steps = config["offline_steps"]
     num_online_steps = config["total_steps"] - num_offline_steps
+    epsilon = None
 
     for step in tqdm.trange(config["total_steps"], dynamic_ncols=True):
         # TODO(student): Borrow code from another online training script here. Only run the online training loop after `num_offline_steps` steps.
+        if step > num_offline_steps:
+            # Online training loop
+            epsilon = exploration_schedule.value(step - num_offline_steps)
+            action = agent.get_action(observation, epsilon)
+
+            next_observation, reward, done, _ = env.step(action)
+            replay_buffer.insert(observation, action, reward, next_observation, done)
+
+            next_observation = np.asarray(next_observation)
+
+            if done:
+                observation = env.reset()
+            else:
+                observation = next_observation
 
         # Main training loop
         batch = replay_buffer.sample(config["batch_size"])
@@ -95,6 +124,7 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
             )
             returns = [t["episode_statistics"]["r"] for t in trajectories]
             ep_lens = [t["episode_statistics"]["l"] for t in trajectories]
+            recent_observations = [t["observation"] for t in trajectories]
 
             logger.log_scalar(np.mean(returns), "eval_return", step)
             logger.log_scalar(np.mean(ep_lens), "eval_ep_len", step)
@@ -107,7 +137,7 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
                 logger.log_scalar(np.max(ep_lens), "eval/ep_len_max", step)
                 logger.log_scalar(np.min(ep_lens), "eval/ep_len_min", step)
 
-        if step % args.visualize_interval == 0:
+        if step % args.visualize_interval == 0 and len(recent_observations) > 0:
             env_pointmass: Pointmass = env.unwrapped
             observations = np.stack(recent_observations)
             recent_observations = []
